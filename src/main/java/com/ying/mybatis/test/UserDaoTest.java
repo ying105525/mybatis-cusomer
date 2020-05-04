@@ -1,11 +1,14 @@
 package com.ying.mybatis.test;
 
 import com.ying.mybatis.io.Resources;
+import com.ying.mybatis.po.User;
+import com.ying.mybatis.sqlsession.SqlSession;
 import com.ying.mybatis.sqlsession.SqlSessionFactory;
 import com.ying.mybatis.sqlsession.SqlSessionFactoryBuilder;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author 应森亮
@@ -25,7 +28,19 @@ public class UserDaoTest {
         InputStream inputStream = Resources.getResourceAsStream(location);
 
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-        //        TODO:
+
+        // SqlSession表示一个SQL会话，每次都new，如果对于SqlSession的创建细节，程序员不想关注
+        // 此时可以将SqlSession交给专业的Factory去生产
+
+        SqlSession sqlSession = sqlSessionFactory.openSqlSession();
+        String statementId = "test" + "." + "findUserById";
+        User user = new User();
+        user.setId(1);
+        // user.setUsername("王五");
+
+        List<User> users = sqlSession.selectList(statementId, user);
+
+        System.out.println(users);
 
     }
 
